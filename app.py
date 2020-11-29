@@ -18,9 +18,6 @@ def get_main_colors(img_array):
         (cv2_img.shape[0] * cv2_img.shape[1], 3))
     cluster = KMeans(n_clusters=5)
     cluster.fit(X=cv2_img)
-    KMeans(algorithm='auto', copy_x=True, init='k-means++', max_iter=300,
-           n_clusters=5, n_init=10, n_jobs=1, precompute_distances='auto',
-           random_state=None, tol=0.0001, verbose=0)
     cluster_centers_arr = cluster.cluster_centers_.astype(
         int, copy=False)
 
