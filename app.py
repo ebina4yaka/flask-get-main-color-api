@@ -25,7 +25,7 @@ def get_main_colors(img_array):
 
     for rgb_arr in cluster_centers_arr:
         color_hex_str = '#%02x%02x%02x' % tuple(rgb_arr)
-        response.append({'color': color_hex_str})
+        response.append(jsonify({'color': color_hex_str}))
 
     return response
 
