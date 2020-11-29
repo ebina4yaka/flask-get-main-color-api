@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
@@ -25,7 +26,7 @@ def get_main_colors(img_array):
 
     for rgb_arr in cluster_centers_arr:
         color_hex_str = '#%02x%02x%02x' % tuple(rgb_arr)
-        response.append(jsonify({'color': color_hex_str}))
+        response.append(color_hex_str)
 
     return response
 
@@ -38,4 +39,4 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, threaded=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))

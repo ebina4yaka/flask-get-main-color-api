@@ -17,6 +17,7 @@ WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/requirements.txt .
 
+RUN pip install gunicorn
 RUN pip install -r requirements.txt
 
 RUN apt-get update
@@ -24,4 +25,4 @@ RUN apt-get install -y libgl1-mesa-dev libopencv-dev
 
 COPY . .
 
-CMD flask run --host=0.0.0.0 --port=$PORT
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
