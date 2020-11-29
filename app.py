@@ -34,7 +34,7 @@ def get_main_colors(img_array):
 def upload():
     img_stream = base64.b64decode(request.json['image'])
     img_array = np.asarray(bytearray(img_stream), dtype=np.uint8)
-    return jsonify(get_main_colors(img_array))
+    return jsonify({"colors": get_main_colors(img_array)})
 
 
 if __name__ == '__main__':
