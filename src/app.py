@@ -10,6 +10,11 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route('/', methods=['GET'])
+def it_works():
+    return "it works!"
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload():
     img_stream: bytes = base64.b64decode(request.json['image'])
