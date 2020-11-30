@@ -25,4 +25,4 @@ RUN apt-get install -y libgl1-mesa-dev libopencv-dev
 
 COPY . .
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 src.app:app
