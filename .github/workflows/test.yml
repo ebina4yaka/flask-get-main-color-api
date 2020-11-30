@@ -24,6 +24,7 @@ jobs:
           python-version: '3.8.x'
       - name: Install dependencies
         run: |
+          pip install poetry
           poetry export -f requirements.txt > requirements.txt
           pip install -r requirements.txt
       - name: Test with pytest
