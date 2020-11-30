@@ -1,0 +1,29 @@
+name: python test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'fix/**'
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8.x'
+    - name: Install dependencies
+      run: |
+        apt-get update
+        apt-get install -y libgl1-mesa-dev libopencv-dev
+        pip install poetry
+        poetry install
+    - name: Test with pytest
+      run: python -m unittest discover tests -v
