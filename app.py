@@ -2,36 +2,43 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
-import numpy as np
+from numpy import asarray, ndarray, uint8
 import cv2
 from sklearn.cluster import KMeans
 
 app = Flask(__name__)
 CORS(app)
 
+CHANNEL = 3
+THREE_CHANNEL_COLOR_IMAGE = 1
+CLUSTER_SIZE = 5
 
-def get_main_colors(img_array):
+
+def convert_rgb_tuple_to_color_hex_string(rgb_tuple: tuple) -> str:
+    return '#%02x%02x%02x' % rgb_tuple
+
+
+def get_main_colors(img_array: ndarray) -> list[str]:
     response = []
-    cv2_img = cv2.imdecode(img_array, 1)
+    cv2_img = cv2.imdecode(img_array, THREE_CHANNEL_COLOR_IMAGE)
     cv2_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2RGB)
     cv2_img = cv2_img.reshape(
-        (cv2_img.shape[0] * cv2_img.shape[1], 3))
-    cluster = KMeans(n_clusters=5)
+        (cv2_img.shape[0] * cv2_img.shape[1], CHANNEL))
+    cluster = KMeans(n_clusters=CLUSTER_SIZE)
     cluster.fit(X=cv2_img)
     cluster_centers_arr = cluster.cluster_centers_.astype(
         int, copy=False)
 
     for rgb_arr in cluster_centers_arr:
-        color_hex_str = '#%02x%02x%02x' % tuple(rgb_arr)
-        response.append(color_hex_str)
+        response.append(convert_rgb_tuple_to_color_hex_string(tuple(rgb_arr)))
 
     return response
 
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
-    img_stream = base64.b64decode(request.json['image'])
-    img_array = np.asarray(bytearray(img_stream), dtype=np.uint8)
+    img_stream: bytes = base64.b64decode(request.json['image'])
+    img_array: ndarray = asarray(bytearray(img_stream), dtype=uint8)
     return jsonify({"colors": get_main_colors(img_array)})
 
 
