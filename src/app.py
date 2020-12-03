@@ -18,8 +18,7 @@ def it_works():
 @app.route('/api/upload', methods=['POST'])
 def upload():
     img_stream: bytes = base64.b64decode(request.json['image'])
-    img_array: ndarray = asarray(bytearray(img_stream), dtype=uint8)
-    return jsonify({"colors": get_main_colors(img_array)})
+    return jsonify({"colors": get_main_colors(img_stream)})
 
 
 if __name__ == '__main__':
