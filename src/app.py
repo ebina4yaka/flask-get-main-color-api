@@ -2,7 +2,6 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
-from numpy import asarray, ndarray, uint8
 
 from src.get_main_colors import get_main_colors
 
@@ -18,8 +17,13 @@ def it_works():
 @app.route('/api/upload', methods=['POST'])
 def upload():
     img_stream: bytes = base64.b64decode(request.json['image'])
-    img_array: ndarray = asarray(bytearray(img_stream), dtype=uint8)
-    return jsonify({"colors": get_main_colors(img_array)})
+    return jsonify({"colors": get_main_colors(img_stream)})
+
+
+@app.route('/api/upload/clusters/<clusters>', methods=['POST'])
+def upload_with_clusters(clusters):
+    img_stream: bytes = base64.b64decode(request.json['image'])
+    return jsonify({"colors": get_main_colors(img_stream, clusters)})
 
 
 if __name__ == '__main__':
